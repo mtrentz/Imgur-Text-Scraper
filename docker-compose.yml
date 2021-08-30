@@ -1,0 +1,12 @@
+version: '3'
+services:
+  downloader:
+    build:
+      dockerfile: ./docker/downloader.dockerfile
+      context: .
+    image: mtrentz/downloader
+    container_name: downloader
+    volumes:
+      - ./imgs:/app/imgs
+    ports:
+      - "8001:8001"
