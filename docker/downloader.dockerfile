@@ -4,7 +4,6 @@ WORKDIR /app
 COPY downloader ./downloader
 WORKDIR /app/downloader
 RUN CGO_ENABLED=0 GOOS=linux go build -o main
-CMD ["./main"]
 
 FROM alpine:latest AS production
 WORKDIR /app

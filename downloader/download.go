@@ -108,7 +108,7 @@ func GetContentType(header map[string][]string) (contentType string) {
 	}
 }
 
-func GetImage(imageDir string, imgUrl string) {
+func GetImage(imageDir string, imgUrl string) (imgName string) {
 	// Starting from a valid imgur url, containing an image
 	// this function will download that image and save to a directory
 
@@ -173,4 +173,5 @@ func GetImage(imageDir string, imgUrl string) {
 	}
 	fmt.Println("Saved.")
 
+	return newImageName
 }

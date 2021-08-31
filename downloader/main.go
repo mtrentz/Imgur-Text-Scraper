@@ -33,7 +33,7 @@ func main() {
 	// Codes with 5 characters are older images uploaded to imgur.
 	// Codes with 6 are usually newer, but its harder to find working urls
 	// Codes with 7 are pretty new, and it can take up to minutes trying to find a working url.
-	codeLen := 6
+	codeLen := 7
 
 	counter := 0
 	urlChannel := make(chan string)
@@ -46,7 +46,10 @@ func main() {
 	}
 
 	for val := range urlChannel {
-		GetImage(imageDir, val)
+		// Downloads image
+		imgName := GetImage(imageDir, val)
+		// Sends image name to the python server to be analysed
+		Communicate(imgName)
 		counter++
 		if counter >= imgsWanted {
 			// Close channel and stop all goroutines
@@ -56,5 +59,4 @@ func main() {
 			break
 		}
 	}
-
 }

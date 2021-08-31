@@ -9,4 +9,4 @@ services:
     volumes:
       - ./imgs:/app/imgs
     ports:
-      - "8001:8001"
+      - "8001:8005"
