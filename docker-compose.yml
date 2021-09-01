@@ -1,5 +1,19 @@
 version: '3'
 services:
+  analyser:
+    build:
+      dockerfile: ./docker/analyser.dockerfile
+      context: .
+    image: mtrentz/analyser
+    container_name: analyser
+    volumes:
+      - ./imgs:/app/imgs
+      - ./files:/app/files
+    networks:
+      - imgur_net
+    ports:
+      - "8005:8005"
+
   downloader:
     build:
       dockerfile: ./docker/downloader.dockerfile
@@ -8,5 +22,14 @@ services:
     container_name: downloader
     volumes:
       - ./imgs:/app/imgs
+      - ./files:/app/files
     ports:
-      - "8001:8005"
+      - "8006:8006"
+    networks:
+      - imgur_net
+    depends_on: 
+      - "analyser"
+
+networks:
+  imgur_net:
+    driver: bridge
