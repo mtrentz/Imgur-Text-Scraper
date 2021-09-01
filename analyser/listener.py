@@ -1,8 +1,9 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from ocr import detect_text
-from database import insert_text
+from database import insert_text, create_db
 from http import HTTPStatus
-from PIL import Image
+from pathlib import Path
+import easyocr
 import sqlite3
 import json
 import sys
@@ -39,11 +40,11 @@ class _RequestHandler(BaseHTTPRequestHandler):
         img_path = os.path.join(HERE, '..', 'imgs', img_name)
 
         # Conect do Database
-        conn = sqlite3.connect(os.path.join(HERE, '..', 'detected_text.db'))
+        conn = sqlite3.connect(os.path.join(HERE, '..', 'files', 'detected_text.db'))
         c = conn.cursor()
 
-        # Detects text
-        text = detect_text(img_path)
+        # Detects text, reader object started in main execution
+        text = detect_text(img_path, reader)
         print(text)
 
         # Add text to DB
@@ -70,8 +71,16 @@ def run_server():
 
 
 if __name__ == '__main__':
+    HERE = os.path.dirname(sys.argv[0])
+    Path(os.path.join(HERE, '..', 'files')).mkdir(parents=True, exist_ok=True)
+    print('Starting OCR reader')
+    # Starts here so it is as soon as the container starts
+    reader = easyocr.Reader(['en'], gpu=False)
+    print('Starting database...')
+    create_db()
+    print('Running server...')
     run_server()
 
     # POST with cURL
     # curl -d '{"msg":"test_msg"}' -X POST localhost:8001
-    # curl -d '{"msg":"IgnUjr.png"}' -X POST localhost:8001
+    # curl -d '{"msg":"El2dyRE.png"}' -X POST localhost:8001

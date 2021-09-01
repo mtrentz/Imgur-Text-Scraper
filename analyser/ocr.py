@@ -1,10 +1,8 @@
-import easyocr
 import sqlite3
 import sys
 import os
 
-def detect_text(img_path):
-    reader = easyocr.Reader(['en'], gpu=False, verbose=False)
+def detect_text(img_path, reader):
     result = reader.readtext(img_path)
 
     detected_text = ""

@@ -5,7 +5,7 @@ import sys
 def create_db():
     HERE = os.path.dirname(sys.argv[0])
 
-    conn = sqlite3.connect(os.path.join(HERE, '..', 'detected_text.db'))
+    conn = sqlite3.connect(os.path.join(HERE, '..', 'files', 'detected_text.db'))
     c = conn.cursor()
 
     c.execute(
@@ -26,7 +26,3 @@ def insert_text(conn, cursor, img_id, extension, text):
     vals = (img_id, extension, text)
     cursor.execute(sql, vals)
     conn.commit()
-
-
-if __name__ == '__main__':
-    create_db()
