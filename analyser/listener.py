@@ -44,6 +44,7 @@ class _RequestHandler(BaseHTTPRequestHandler):
         c = conn.cursor()
 
         # Detects text, reader object started in main execution
+        print(f'Detecting text on: {img_identifier}')
         text = detect_text(img_path, reader)
         print(text)
 
@@ -73,7 +74,7 @@ def run_server():
 if __name__ == '__main__':
     HERE = os.path.dirname(sys.argv[0])
     Path(os.path.join(HERE, '..', 'files')).mkdir(parents=True, exist_ok=True)
-    print('Starting OCR reader')
+    print('Starting OCR reader...')
     # Starts here so it is as soon as the container starts
     reader = easyocr.Reader(['en'], gpu=False)
     print('Starting database...')
