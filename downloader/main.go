@@ -27,7 +27,7 @@ func main() {
 	// Amount of goroutines
 	// It can be way higher than CPU cores
 	// But sending too many requests will make your IP get locked by imgur
-	numWorkers := 10
+	numWorkers := 6
 
 	// Size of imgur code, for exemple i.imgur.com/x123xD -> 6 random characters
 	// Codes with 5 characters are older images uploaded to imgur.
