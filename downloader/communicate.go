@@ -15,7 +15,7 @@ func Communicate(imageName string) {
 	// url := "http://localhost:8001"
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 	req.Header.Set("X-Custom-Header", "Random String")
 	req.Header.Set("Content-Type", "application/json")
@@ -23,7 +23,7 @@ func Communicate(imageName string) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 	defer resp.Body.Close()
 
