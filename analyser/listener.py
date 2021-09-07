@@ -41,7 +41,7 @@ def api_ready():
 
 
 @app.post('/')
-def imgur_scraper(msg: Message):
+async def imgur_scraper(msg: Message):
     # Get image name
     img_name = msg.msg
 

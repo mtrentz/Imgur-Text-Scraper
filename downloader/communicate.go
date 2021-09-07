@@ -11,11 +11,12 @@ func Communicate(imageName string) {
 	var jsonStr = []byte(fmt.Sprintf(`{"msg":"%s"}`, imageName))
 
 	// POST
-	// url := "http://localhost:8001"
-	url := "http://analyser:8001"
+	url := "http://localhost:8001"
+	// url := "http://analyser:8001"
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("NewRequest error: ", err)
+		return
 	}
 	req.Header.Set("X-Custom-Header", "Random String")
 	req.Header.Set("Content-Type", "application/json")
@@ -23,7 +24,9 @@ func Communicate(imageName string) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("HttpClient error: ", err)
+		resp.Body.Close()
+		return
 	}
 	defer resp.Body.Close()
 

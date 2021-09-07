@@ -16,8 +16,8 @@ func init() {
 		fmt.Println("Waiting for server connection...")
 		for {
 			// // TODO: This and the IP in communicate.go should be a environment variable probably.
-			// _, err := http.Get("http://localhost:8001/ready")
-			_, err := http.Get("http://analyser:8001/ready")
+			_, err := http.Get("http://localhost:8001/ready")
+			// _, err := http.Get("http://analyser:8001/ready")
 			if err == nil {
 				fmt.Println("Connected.")
 				return
@@ -50,7 +50,7 @@ func main() {
 	// Codes with 5 characters are older images uploaded to imgur.
 	// Codes with 6 are usually newer, but its harder to find working urls
 	// Codes with 7 are pretty new, and it can take up to minutes trying to find a working url.
-	codeLen := 7
+	codeLen := 6
 
 	counter := 0
 	urlChannel := make(chan string)
