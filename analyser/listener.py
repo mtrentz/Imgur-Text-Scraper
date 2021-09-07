@@ -1,86 +1,78 @@
-from http.server import HTTPServer, BaseHTTPRequestHandler
-from ocr import detect_text
 from database import insert_text, create_db
-from http import HTTPStatus
+from pydantic import BaseModel
+from fastapi import FastAPI
 from pathlib import Path
+import uvicorn
 import easyocr
 import sqlite3
-import json
 import sys
 import os
 
-# Got the code from this comment https://gist.github.com/nitaku/10d0662536f37a087e1b#gistcomment-3375622
-# which got it from somewhere else
-class _RequestHandler(BaseHTTPRequestHandler):
-    def _set_headers(self):
-        self.send_response(HTTPStatus.OK.value)
-        self.send_header('Content-type', 'application/json')
-        # Allow requests from any origin, so CORS policies don't
-        # prevent local development.
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.end_headers()
 
-    def do_POST(self):
-        # Reads message
-        length = int(self.headers.get('content-length'))
-        message = json.loads(self.rfile.read(length))
-
-        # Reply back
-        self._set_headers()
-        self.wfile.write(json.dumps({'success': True}).encode('utf-8'))
-
-        # Get image name
-        img_name = message['msg']
-
-        HERE = os.path.dirname(sys.argv[0])
-
-        # Image/File info
-        img_identifier = img_name.split('.')[0]
-        img_extension = img_name.split('.')[1]
-        img_path = os.path.join(HERE, '..', 'imgs', img_name)
-
-        # Conect do Database
-        conn = sqlite3.connect(os.path.join(HERE, '..', 'files', 'detected_text.db'))
-        c = conn.cursor()
-
-        # Detects text, reader object started in main execution
-        print(f'Detecting text on: {img_identifier}')
-        text = detect_text(img_path, reader)
-        print(text)
-
-        # Add text to DB
-        insert_text(conn, c, img_identifier, img_extension, text)
-
-        # Closes db connection
-        conn.close()
-    
-
-    def do_OPTIONS(self):
-        # Send allow-origin header for preflight POST XHRs.
-        self.send_response(HTTPStatus.NO_CONTENT.value)
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST')
-        self.send_header('Access-Control-Allow-Headers', 'content-type')
-        self.end_headers()
+class Message(BaseModel):
+    msg: str
 
 
-def run_server():
-    server_address = ('', 8001)
-    httpd = HTTPServer(server_address, _RequestHandler)
-    print('serving at %s:%d' % server_address)
-    httpd.serve_forever()
+def detect_text(img_path):
+    result = reader.readtext(img_path)
+    detected_text = ""
+    # Get detected text separated by newline
+    for res in result:
+        text = res[1]
+        detected_text += text + '\n'
+    return detected_text
+
+
+HERE = os.path.dirname(sys.argv[0])
+# Confirms that the output folder exists
+Path(os.path.join(HERE, '..', 'files')).mkdir(parents=True, exist_ok=True)
+
+print('Starting database...')
+create_db()
+print('Starting OCR reader...')
+reader = easyocr.Reader(['en'], gpu=False)
+
+app = FastAPI()
+
+
+@app.get('/ready')
+def api_ready():
+    return {'Connected': 'API is online'}
+
+
+@app.post('/')
+def imgur_scraper(msg: Message):
+    # Get image name
+    img_name = msg.msg
+
+    HERE = os.path.dirname(sys.argv[0])
+
+    # Image/File info
+    img_identifier = img_name.split('.')[0]
+    img_extension = img_name.split('.')[1]
+    img_path = os.path.join(HERE, '..', 'imgs', img_name)
+
+    # Conect do Database
+    conn = sqlite3.connect(os.path.join(HERE, '..', 'files', 'detected_text.db'))
+    c = conn.cursor()
+
+    # Detects text, reader object started in main execution
+    print(f'Detecting text on: {img_identifier}')
+    text = detect_text(img_path)
+    print(f'Detected text on: {img_identifier}')
+
+    # Add text to DB
+    insert_text(conn, c, img_identifier, img_extension, text)
+
+    # Closes db connection
+    conn.close()
+
+    return {'msg': 'OK'}
 
 
 if __name__ == '__main__':
-    HERE = os.path.dirname(sys.argv[0])
-    Path(os.path.join(HERE, '..', 'files')).mkdir(parents=True, exist_ok=True)
-    print('Starting OCR reader...')
-    # Starts here so it is as soon as the container starts
-    reader = easyocr.Reader(['en'], gpu=False)
-    print('Starting database...')
-    create_db()
     print('Running server...')
-    run_server()
+    uvicorn.run(app, host="0.0.0.0", port=8001)
 
     # POST with cURL
     # curl -d '{"msg":"test_msg"}' -X POST localhost:8001
