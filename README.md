@@ -14,6 +14,10 @@ docker-compose build
 docker-compose up
 ```
 
+## Files
+All images are downloaded into /imgs.
+The database is located in /files.
+
 ## Warning
 Since the urls are randomly generated, there **WILL** be a good amount of NSFW images.
 
