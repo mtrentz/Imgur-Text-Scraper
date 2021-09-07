@@ -11,8 +11,8 @@ func Communicate(imageName string) {
 	var jsonStr = []byte(fmt.Sprintf(`{"msg":"%s"}`, imageName))
 
 	// POST
-	url := "http://analyser:8001"
 	// url := "http://localhost:8001"
+	url := "http://analyser:8001"
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
 	if err != nil {
 		fmt.Println(err)
@@ -27,6 +27,6 @@ func Communicate(imageName string) {
 	}
 	defer resp.Body.Close()
 
-	fmt.Println("response Status:", resp.Status)
+	// fmt.Println("response Status:", resp.Status)
 
 }
