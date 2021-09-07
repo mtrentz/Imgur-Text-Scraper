@@ -31,13 +31,6 @@ services:
       - imgur_net
     depends_on: 
       - "analyser"
-    command:
-      - /bin/sh
-      - -c
-      - |
-          echo "sleep for 60sec"
-          sleep 60 
-          ./main
 
 networks:
   imgur_net:

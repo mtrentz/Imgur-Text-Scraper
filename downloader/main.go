@@ -2,13 +2,30 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"runtime"
+	"time"
 )
 
 const imageDir string = "../imgs"
 
 func init() {
+	func() {
+		// Wait until server is online
+		fmt.Println("Waiting for server connection...")
+		for {
+			// // TODO: This and the IP in communicate.go should be a environment variable probably.
+			// _, err := http.Get("http://localhost:8001/ready")
+			_, err := http.Get("http://analyser:8001/ready")
+			if err == nil {
+				fmt.Println("Connected.")
+				return
+			}
+			time.Sleep(time.Second)
+		}
+	}()
+
 	// Case not exsits, create folder to store images
 	if _, err := os.Stat(imageDir); os.IsNotExist(err) {
 		err := os.Mkdir(imageDir, 0700)
@@ -38,6 +55,8 @@ func main() {
 	counter := 0
 	urlChannel := make(chan string)
 	quitChannel := make(chan bool)
+
+	fmt.Println("Started looking for valid image URL")
 
 	// Number of goroutines running in the background
 	// Its ok to add more than num of CPU cores since most of time is spent waiting for http requests
