@@ -53,13 +53,21 @@ async def imgur_scraper(msg: Message):
     img_path = os.path.join(HERE, '..', 'imgs', img_name)
 
     # Conect do Database
-    conn = sqlite3.connect(os.path.join(HERE, '..', 'files', 'detected_text.db'))
-    c = conn.cursor()
+    try:
+        conn = sqlite3.connect(os.path.join(HERE, '..', 'files', 'detected_text.db'))
+        c = conn.cursor()
+    except Exception as e:
+        print('Error coneccting to DB', e)
+        return {'msg': 'Error coneccting to DB'}
 
-    # Detects text, reader object started in main execution
-    print(f'Detecting text on: {img_identifier}')
-    text = detect_text(img_path)
-    print(f'Detected text on: {img_identifier}')
+    try:
+        # Detects text, reader object started in main execution
+        print(f'Detecting text on: {img_identifier}')
+        text = detect_text(img_path)
+        print(f'Detected text on: {img_identifier}')
+    except Exception as e:
+        print('Error recognizing image', e)
+        return {'msg': 'Error recognizing image'}
 
     # Add text to DB
     insert_text(conn, c, img_identifier, img_extension, text)
