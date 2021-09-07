@@ -16,8 +16,8 @@ func init() {
 		fmt.Println("Waiting for server connection...")
 		for {
 			// // TODO: This and the IP in communicate.go should be a environment variable probably.
-			_, err := http.Get("http://localhost:8001/ready")
-			// _, err := http.Get("http://analyser:8001/ready")
+			// _, err := http.Get("http://localhost:8001/ready")
+			_, err := http.Get("http://analyser:8001/ready")
 			if err == nil {
 				fmt.Println("Connected.")
 				return
