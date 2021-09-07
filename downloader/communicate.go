@@ -25,7 +25,6 @@ func Communicate(imageName string) {
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("HttpClient error: ", err)
-		resp.Body.Close()
 		return
 	}
 	defer resp.Body.Close()
