@@ -2,6 +2,8 @@ from database import insert_text, create_db
 from pydantic import BaseModel
 from fastapi import FastAPI
 from pathlib import Path
+from PIL import Image
+import numpy as np
 import uvicorn
 import easyocr
 import sqlite3
@@ -13,8 +15,18 @@ class Message(BaseModel):
     msg: str
 
 
+def resized_img(img_path):
+    with Image.open(img_path) as im:
+        im = im.convert('RGB')
+        max_size = 1000, 1000
+        # Resizes image
+        im.thumbnail(max_size, Image.ANTIALIAS)
+        return im.copy()
+
+
 def detect_text(img_path):
-    result = reader.readtext(img_path)
+    img = np.asarray(resized_img(img_path))
+    result = reader.readtext(img)
     detected_text = ""
     # Get detected text separated by newline
     for res in result:
