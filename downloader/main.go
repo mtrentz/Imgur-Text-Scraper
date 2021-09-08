@@ -11,13 +11,24 @@ import (
 const imageDir string = "../imgs"
 
 func init() {
+
+	var url string
+
+	// If ran in docker-compose, ip is http://analyser:8001, else its localhost
+	serviceName, isSet := os.LookupEnv("API_SERVICE_NAME")
+	if isSet {
+		url = fmt.Sprintf("http://%s:8001/ready", serviceName)
+	} else {
+		url = "http://localhost:8001/ready"
+	}
+
+	fmt.Println("API url location: ", url)
+
 	func() {
 		// Wait until server is online
 		fmt.Println("Waiting for server connection...")
 		for {
-			// // TODO: This and the IP in communicate.go should be a environment variable probably.
-			// _, err := http.Get("http://localhost:8001/ready")
-			_, err := http.Get("http://analyser:8001/ready")
+			_, err := http.Get(url)
 			if err == nil {
 				fmt.Println("Connected.")
 				return
