@@ -1,4 +1,6 @@
 /imgs
+/files
+/testing
 .vscode
 venv
 *.db
