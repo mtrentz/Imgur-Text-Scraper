@@ -1,6 +1,8 @@
 /imgs
 /files
 /testing
+/old_imgs
+/old_detections
 .vscode
 venv
 *.db
