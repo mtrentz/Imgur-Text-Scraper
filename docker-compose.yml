@@ -31,6 +31,8 @@ services:
       - imgur_net
     depends_on: 
       - "analyser"
+    environment:
+      - API_SERVICE_NAME=analyser
 
 networks:
   imgur_net:
