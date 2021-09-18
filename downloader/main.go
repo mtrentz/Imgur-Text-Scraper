@@ -40,7 +40,7 @@ func init() {
 
 func main() {
 	// Amount of images to download
-	imgsWanted := 5000
+	imgsWanted := 9999999
 	// Amount of goroutines
 	// It can be way higher than CPU cores
 	// But sending too many requests will make your IP get locked by imgur
