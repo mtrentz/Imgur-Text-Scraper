@@ -119,6 +119,9 @@ async def imgur_scraper(msg: Message):
     # Closes db connection
     conn.close()
 
+    # Try to detect important info on text
+    classify_text(img_name, text)
+
     return {'msg': 'OK'}
 
 
