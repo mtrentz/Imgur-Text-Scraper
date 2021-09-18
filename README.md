@@ -13,14 +13,14 @@ The docker app will spin out many goroutines that will look for valid imgur urls
 
 The python app will wait for new images to be downloaded and run OCR on it.
 
-## Running with docker
+### Running with docker
 Run it with docker-compose
 ```
 docker-compose build
 docker-compose up
 ```
 
-## Running without docker
+### Running without docker
 You'll need both Golang and Python installed.
 
 For Golang there are no extra dependencies.
@@ -60,6 +60,8 @@ reader = easyocr.Reader(['en'], gpu=True)
 All images are downloaded into /imgs.
 
 The database is located in /files.
+
+Images that are classified with important texts are saved on /files/detections.
 
 ## Warning
 Since the urls are randomly generated, there **WILL** be a good amount of NSFW images.
