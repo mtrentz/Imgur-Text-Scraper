@@ -12,6 +12,7 @@ REGEX_DETECTION_LIST = {
         r'bit',
         r'crypto',
         r'binance',
+        r'wallet',
         # Bitcoin wallet regex
         r'(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}',
         # Eth wallet regex
@@ -24,5 +25,13 @@ REGEX_DETECTION_LIST = {
         r'\s*(\d{2}|\d{0})[-. ]?(\d{5}|\d{4})[-. ]?(\d{4})[-. ]?\s*',
         # India phone
         r'\+?\d[\d -]{8,12}\d',
+    ],
+    'payments': [
+        r'payment',
+        r'purchase',
+        r'credit',
+        r'card',
+        r'charge',
+        r'billing',
     ]
 }
